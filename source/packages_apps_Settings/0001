@@ -1,0 +1,265 @@
+From: ChepKun <ProgrammerKun@gmail.com>
+Subject: [PATCH] update package Settings
+
+diff --git a/AndroidManifest.xml b/AndroidManifest.xml
+index 46c0142..6eeaee1 100644
+--- a/AndroidManifest.xml
++++ b/AndroidManifest.xml
+@@ -64,6 +64,7 @@
+     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+     <uses-permission android:name="android.permission.SET_TIME" />
+     <uses-permission android:name="android.permission.CHANGE_PRIVACY_GUARD_STATE" />
++    <uses-permission android:name="android.permission.REBOOT" />
+ 
+     <permission
+         android:name="android.permission.REQUEST_SUPERUSER"
+diff --git a/res/values-ru/cm_strings.xml b/res/values-ru/cm_strings.xml
+index 4cd85b5..8d92292 100644
+--- a/res/values-ru/cm_strings.xml
++++ b/res/values-ru/cm_strings.xml
+@@ -934,4 +934,15 @@
+     <string name="privacy_guard_manager_show_system_apps">Системные приложения</string>
+     <string name="privacy_guard_manager_filter_permissions">Фильтр разрешений</string>
+ 
++    <!-- **** YAMATO ADDITIONS START **** -->
++
++    <!-- Vold Switchable Pair -->
++    <string name="storage_switch_title">SD-карта как основная память</string>
++    <string name="storage_switch_summary_off">Сейчас используется встроенная память для приложений и мультимедиа файлов</string>
++    <string name="storage_switch_summary_on">Сейчас используется SD-карта для приложений и мультимедиа файлов</string>
++    <string name="dlg_storage_switch_title">Подтверждение изменений</string>
++    <string name="dlg_storage_switch_prompt">Для применения внесенных изменений потребуется перезагрузка.\n\nВы хотите продолжить?</string>
++
++    <!-- **** YAMATO ADDITIONS END **** -->
++
+ </resources>
+diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
+index 400f82e..a980c2b 100644
+--- a/res/values/cm_strings.xml
++++ b/res/values/cm_strings.xml
+@@ -1002,4 +1002,15 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
+     <string name="privacy_guard_manager_show_system_apps">Show built-in apps</string>
+     <string name="privacy_guard_manager_filter_permissions">Permission filter</string>
+ 
++    <!-- **** YAMATO ADDITIONS START **** -->
++
++    <!-- Vold Switchable Pair -->
++    <string name="storage_switch_title">Use external SD as primary</string>
++    <string name="storage_switch_summary_off">Using internal storage for apps and media</string>
++    <string name="storage_switch_summary_on">Using external SD Card for apps and media</string>
++    <string name="dlg_storage_switch_title">Confirm changes</string>
++    <string name="dlg_storage_switch_prompt">To apply the changed configuration a reboot is required.\n\nDo you want to continue?</string>
++
++    <!-- **** YAMATO ADDITIONS END **** -->
++
+ </resources>
+diff --git a/res/xml/device_info_memory.xml b/res/xml/device_info_memory.xml
+index e905f39..edf670a 100644
+--- a/res/xml/device_info_memory.xml
++++ b/res/xml/device_info_memory.xml
+@@ -17,6 +17,12 @@
+ <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+         android:title="@string/storage_settings_title">
+ 
++    <CheckBoxPreference
++        android:key="key_switch_storage"
++        android:title="@string/storage_switch_title"
++        android:summaryOn="@string/storage_switch_summary_on"
++        android:summaryOff="@string/storage_switch_summary_off" />
++
+ <!-- Preference categories are dynamically created based on the list of available storage volumes -->
+ 
+ </PreferenceScreen>
+diff --git a/src/com/android/settings/cyanogenmod/PerformanceSettings.java b/src/com/android/settings/cyanogenmod/PerformanceSettings.java
+index 566036c..1e8be5a 100644
+--- a/src/com/android/settings/cyanogenmod/PerformanceSettings.java
++++ b/src/com/android/settings/cyanogenmod/PerformanceSettings.java
+@@ -24,6 +24,7 @@ import android.preference.CheckBoxPreference;
+ import android.preference.Preference;
+ import android.preference.ListPreference;
+ import android.preference.PreferenceScreen;
++import android.provider.Settings;
+ 
+ import com.android.settings.R;
+ import com.android.settings.SettingsPreferenceFragment;
+@@ -45,6 +46,8 @@ public class PerformanceSettings extends SettingsPreferenceFragment
+ 
+     private static final String USE_16BPP_ALPHA_PROP = "persist.sys.use_16bpp_alpha";
+ 
++    private static final String SHOW_ALERT_DIALOG_PROP = "show_alert_dialog";
++
+     private ListPreference mUseDitheringPref;
+ 
+     private CheckBoxPreference mUse16bppAlphaPref;
+@@ -72,22 +75,27 @@ public class PerformanceSettings extends SettingsPreferenceFragment
+             mUse16bppAlphaPref.setChecked("1".equals(use16bppAlpha));
+ 
+             /* Display the warning dialog */
+-            alertDialog = new AlertDialog.Builder(getActivity()).create();
+-            alertDialog.setTitle(R.string.performance_settings_warning_title);
+-            alertDialog.setMessage(getResources().getString(R.string.performance_settings_warning));
+-            alertDialog.setButton(DialogInterface.BUTTON_POSITIVE,
+-                    getResources().getString(com.android.internal.R.string.ok),
+-                    new DialogInterface.OnClickListener() {
+-                        public void onClick(DialogInterface dialog, int which) {
+-                            return;
+-                        }
+-                    });
+-            alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+-                public void onCancel(DialogInterface dialog) {
+-                    PerformanceSettings.this.finish();
+-                }
+-            });
+-            alertDialog.show();
++	    boolean showAlertDialog = Settings.System.getInt(getContentResolver(), SHOW_ALERT_DIALOG_PROP, 1) == 1;
++	
++	    if (showAlertDialog){
++            	alertDialog = new AlertDialog.Builder(getActivity()).create();
++            	alertDialog.setTitle(R.string.performance_settings_warning_title);
++            	alertDialog.setMessage(getResources().getString(R.string.performance_settings_warning));
++            	alertDialog.setButton(DialogInterface.BUTTON_POSITIVE,
++                    	getResources().getString(com.android.internal.R.string.ok),
++                    	new DialogInterface.OnClickListener() {
++                        	public void onClick(DialogInterface dialog, int which) {
++                            	   return;
++                        	}
++                    	});
++            	alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
++                	public void onCancel(DialogInterface dialog) {
++                    	   PerformanceSettings.this.finish();
++                	}
++            	});
++		Settings.System.putInt(getContentResolver(), SHOW_ALERT_DIALOG_PROP, 0);
++            	alertDialog.show();
++	    } 
+         }
+     }
+ 
+diff --git a/src/com/android/settings/deviceinfo/Memory.java b/src/com/android/settings/deviceinfo/Memory.java
+index 529c81c..cdcfd98 100644
+--- a/src/com/android/settings/deviceinfo/Memory.java
++++ b/src/com/android/settings/deviceinfo/Memory.java
+@@ -31,15 +31,19 @@ import android.hardware.usb.UsbManager;
+ import android.os.Bundle;
+ import android.os.Environment;
+ import android.os.IBinder;
++import android.os.PowerManager;
+ import android.os.RemoteException;
+ import android.os.ServiceManager;
++import android.os.SystemProperties;
+ import android.os.storage.IMountService;
+ import android.os.storage.StorageEventListener;
+ import android.os.storage.StorageManager;
+ import android.os.storage.StorageVolume;
++import android.preference.CheckBoxPreference;
+ import android.preference.Preference;
+ import android.preference.PreferenceActivity;
+ import android.preference.PreferenceScreen;
++import android.text.TextUtils;
+ import android.util.Log;
+ import android.view.Menu;
+ import android.view.MenuInflater;
+@@ -65,6 +69,7 @@ public class Memory extends SettingsPreferenceFragment {
+ 
+     private static final int DLG_CONFIRM_UNMOUNT = 1;
+     private static final int DLG_ERROR_UNMOUNT = 2;
++    private static final int DLG_STORAGE_SWITCH = 3;
+ 
+     // The mountToggle Preference that has last been clicked.
+     // Assumes no two successive unmount event on 2 different volumes are performed before the first
+@@ -79,6 +84,12 @@ public class Memory extends SettingsPreferenceFragment {
+ 
+     private ArrayList<StorageVolumePreferenceCategory> mCategories = Lists.newArrayList();
+ 
++    private static final String KEY_SWITCH_STORAGE = "key_switch_storage";
++    private static final String VOLD_SWITCH_PERSIST_PROP = "persist.sys.vold.switchexternal";
++    private static final String VOLD_SWITCHABLEPAIR_PROP = "persist.sys.vold.switchablepair";
++    
++    private CheckBoxPreference mSwitchStoragePref;
++
+     @Override
+     public void onCreate(Bundle icicle) {
+         super.onCreate(icicle);
+@@ -92,6 +103,27 @@ public class Memory extends SettingsPreferenceFragment {
+ 
+         addPreferencesFromResource(R.xml.device_info_memory);
+ 
++        String voldswitch = SystemProperties.get(VOLD_SWITCH_PERSIST_PROP, "0");
++        mSwitchStoragePref = (CheckBoxPreference) findPreference(KEY_SWITCH_STORAGE);
++        mSwitchStoragePref.setChecked("1".equals(voldswitch));
++
++        if (!Environment.isExternalStorageEmulated()) {
++            String PRIMARY_STORAGE = System.getenv("EXTERNAL_STORAGE");
++            String SECONDARY_STORAGE = System.getenv("SECONDARY_STORAGE");
++            if (!TextUtils.isEmpty(PRIMARY_STORAGE) && !TextUtils.isEmpty(SECONDARY_STORAGE)) {
++                SystemProperties.set(VOLD_SWITCHABLEPAIR_PROP, PRIMARY_STORAGE + ',' +
++                        SECONDARY_STORAGE);
++                Log.i(TAG, "Setting persist.sys.vold.swichablepair=" + PRIMARY_STORAGE + ',' +
++                        SECONDARY_STORAGE);
++            } else {
++                Log.i(TAG, "Vold switch not possible on this device.");
++            }
++        }
++
++	if (SystemProperties.get(VOLD_SWITCHABLEPAIR_PROP).equals("")) {
++            removePreference(KEY_SWITCH_STORAGE);
++       	}
++
+         addCategory(StorageVolumePreferenceCategory.buildForInternal(context));
+ 
+         final StorageVolume[] storageVolumes = mStorageManager.getVolumeList();
+@@ -209,7 +241,9 @@ public class Memory extends SettingsPreferenceFragment {
+ 
+     @Override
+     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+-        if (StorageVolumePreferenceCategory.KEY_CACHE.equals(preference.getKey())) {
++        if(preference == mSwitchStoragePref) {
++	    showDialogInner(DLG_STORAGE_SWITCH);
++        } else if (StorageVolumePreferenceCategory.KEY_CACHE.equals(preference.getKey())) {
+             ConfirmClearCacheFragment.show(this);
+             return true;
+         }
+@@ -263,6 +297,7 @@ public class Memory extends SettingsPreferenceFragment {
+     @Override
+     public Dialog onCreateDialog(int id) {
+         switch (id) {
++
+         case DLG_CONFIRM_UNMOUNT:
+                 return new AlertDialog.Builder(getActivity())
+                     .setTitle(R.string.dlg_confirm_unmount_title)
+@@ -273,13 +308,34 @@ public class Memory extends SettingsPreferenceFragment {
+                     .setNegativeButton(R.string.cancel, null)
+                     .setMessage(R.string.dlg_confirm_unmount_text)
+                     .create();
++
+         case DLG_ERROR_UNMOUNT:
+                 return new AlertDialog.Builder(getActivity())
+             .setTitle(R.string.dlg_error_unmount_title)
+             .setNeutralButton(R.string.dlg_ok, null)
+             .setMessage(R.string.dlg_error_unmount_text)
+             .create();
+-        }
++
++        case DLG_STORAGE_SWITCH:
++            return new AlertDialog.Builder(getActivity())
++                .setTitle(R.string.dlg_storage_switch_title)
++                .setMessage(R.string.dlg_storage_switch_prompt)
++                .setPositiveButton(R.string.dlg_ok, new DialogInterface.OnClickListener() {
++                    public void onClick(DialogInterface dialog, int which) {
++                        // do switch
++                        Log.d(TAG,"Setting persist.sys.vold.switchexternal to "+(mSwitchStoragePref.isChecked() ? "1" : "0"));
++                        SystemProperties.set(VOLD_SWITCH_PERSIST_PROP, mSwitchStoragePref.isChecked() ? "1" : "0");
++                        // reboot
++                        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
++                        pm.reboot(null);
++                    }})
++                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
++                    public void onClick(DialogInterface dialog, int which) {
++                        mSwitchStoragePref.setChecked(!mSwitchStoragePref.isChecked());
++                    }})
++                .create();
++	}
++
+         return null;
+     }
+ 
