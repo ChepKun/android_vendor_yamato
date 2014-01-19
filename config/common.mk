@@ -144,7 +144,7 @@ PRODUCT_PACKAGES += \
     VoiceDialer \
     SoundRecorder \
     CMFileManager \
-    LockClockY 
+    LockClockY
 
 PRODUCT_PACKAGES += \
     CellBroadcastReceiver

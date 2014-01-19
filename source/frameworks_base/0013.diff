@@ -1,0 +1,40 @@
+From: ChepKun <ProgrammerKun@gmail.com>
+Subject: frameworks/base (0013): change maximum sound volume 15->20
+
+diff --git a/media/java/android/media/AudioService.java b/media/java/android/media/AudioService.java
+index fd906d7..0aca10f 100644
+--- a/media/java/android/media/AudioService.java
++++ b/media/java/android/media/AudioService.java
+@@ -112,7 +112,7 @@ public class AudioService extends IAudioService.Stub implements OnFinished {
+     protected static final boolean DEBUG_VOL = false;
+ 
+     /** How long to delay before persisting a change in volume/ringer mode. */
+-    private static final int PERSIST_DELAY = 500;
++    private static final int PERSIST_DELAY = 300;
+ 
+     private Context mContext;
+     private ContentResolver mContentResolver;
+diff --git a/media/java/android/media/AudioService.java b/media/java/android/media/AudioService.java
+index fd906d7..97b2049 100644
+--- a/media/java/android/media/AudioService.java
++++ b/media/java/android/media/AudioService.java
+@@ -232,14 +232,14 @@ public class AudioService extends IAudioService.Stub implements OnFinished {
+         5,  // STREAM_VOICE_CALL
+         7,  // STREAM_SYSTEM
+         7,  // STREAM_RING
+-        15, // STREAM_MUSIC
++        20, // STREAM_MUSIC
+         7,  // STREAM_ALARM
+         7,  // STREAM_NOTIFICATION
+-        15, // STREAM_BLUETOOTH_SCO
++        20, // STREAM_BLUETOOTH_SCO
+         7,  // STREAM_SYSTEM_ENFORCED
+-        15, // STREAM_DTMF
+-        15, // STREAM_TTS
+-        15  // STREAM_FM
++        20, // STREAM_DTMF
++        20, // STREAM_TTS
++        20  // STREAM_FM
+     };
+     /* mStreamVolumeAlias[] indicates for each stream if it uses the volume settings
+      * of another stream: This avoids multiplying the volume settings for hidden

@@ -1,13 +1,6 @@
-From 3cdc1ed7c653cbe498e78c4ca48f7ded0aa5fe42 Mon Sep 17 00:00:00 2001
 From: Konsta <konsta09@gmail.com>
-Date: Fri, 26 Apr 2013 16:55:27 +0300
 Subject: frameworks/base (0009): add a part of FM support
 
-Squashed commit between:
-https://www.codeaurora.org/gitweb/quic/la/?p=platform/frameworks/base.git;a=commit;h=27086d06dec240e8915580208197ab7169ec498e
-https://www.codeaurora.org/gitweb/quic/la/?p=platform/frameworks/base.git;a=commit;h=a776f068da4f45f79d42ce7f9ceb6b4f3f18b8ee
-
-Change-Id: Ia6a38a1ad300d9179eead13a117f56017a026826
 ---
  core/java/android/os/Process.java                  |    6 ++++++
  data/etc/platform.xml                              |    2 ++
