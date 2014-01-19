@@ -1,5 +1,5 @@
 From: ChepKun <ProgrammerKun@gmail.com>
-Subject: [PATCH] update package Settings
+Subject: packages/Settings (0001): partitions switch support 
 
 diff --git a/AndroidManifest.xml b/AndroidManifest.xml
 index 46c0142..6eeaee1 100644
@@ -24,7 +24,7 @@ index 4cd85b5..8d92292 100644
 +    <!-- **** YAMATO ADDITIONS START **** -->
 +
 +    <!-- Vold Switchable Pair -->
-+    <string name="storage_switch_title">SD-карта как основная память</string>
++    <string name="storage_switch_title">SD-карта основная</string>
 +    <string name="storage_switch_summary_off">Сейчас используется встроенная память для приложений и мультимедиа файлов</string>
 +    <string name="storage_switch_summary_on">Сейчас используется SD-карта для приложений и мультимедиа файлов</string>
 +    <string name="dlg_storage_switch_title">Подтверждение изменений</string>

@@ -1,0 +1,34 @@
+From: Daz Jones <yuki@thebronasium.com>
+Subject: packages/Bluetooth (0001): fix null jstring jni crash
+
+---
+ jni/com_android_bluetooth_btservice_AdapterService.cpp |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/jni/com_android_bluetooth_btservice_AdapterService.cpp b/jni/com_android_bluetooth_btservice_AdapterService.cpp
+index 5989c79..36f0a22 100755
+--- a/jni/com_android_bluetooth_btservice_AdapterService.cpp
++++ b/jni/com_android_bluetooth_btservice_AdapterService.cpp
+@@ -873,6 +873,10 @@ static int createSocketChannelNative(JNIEnv *env, jobject object, jint type,
+ 
+     if (!sBluetoothSocketInterface) return NULL;
+ 
++    if (name_str == NULL) {
++        ALOGE("cannot get service name - name_str is null");
++        goto Fail;
++    }
+     service_name = env->GetStringUTFChars(name_str, NULL);
+ 
+     uuid = env->GetByteArrayElements(uuidObj, NULL);
+@@ -896,7 +900,7 @@ static int createSocketChannelNative(JNIEnv *env, jobject object, jint type,
+     return socket_fd;
+ 
+ Fail:
+-    if (service_name) env->ReleaseStringUTFChars(name_str, service_name);
++    if (service_name && name_str) env->ReleaseStringUTFChars(name_str, service_name);
+     if (uuid) env->ReleaseByteArrayElements(uuidObj, uuid, 0);
+ 
+     return -1;
+-- 
+1.7.10.4
+

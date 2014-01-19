@@ -216,6 +216,7 @@ endif
 
 PRODUCT_PACKAGE_OVERLAYS += vendor/cm/overlay/dictionaries
 PRODUCT_PACKAGE_OVERLAYS += vendor/yamato/overlay/common
+PRODUCT_PACKAGE_OVERLAYS += vendor/yamato/overlay/extra
 
 PRODUCT_VERSION_MAJOR = 10
 PRODUCT_VERSION_MINOR = 1
