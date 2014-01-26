@@ -1,0 +1,209 @@
+From: ChepKun <ProgrammerKun@gmail.com>
+Subject: frameworks/base (0015): disable default fonts
+
+diff --git a/data/fonts/Android.mk b/data/fonts/Android.mk
+index e02e95a..b1d65b1 100644
+--- a/data/fonts/Android.mk
++++ b/data/fonts/Android.mk
+@@ -15,155 +15,4 @@
+ # We have to use BUILD_PREBUILT instead of PRODUCT_COPY_FIES,
+ # because SMALLER_FONT_FOOTPRINT is only available in Android.mks.
+ 
+-LOCAL_PATH := $(call my-dir)
+-
+-##########################################
+-# create symlink for given font
+-# $(1): new font $(2): link target
+-# should be used with eval: $(eval $(call ...))
+-define create-font-symlink
+-$(PRODUCT_OUT)/system/fonts/$(1) : $(PRODUCT_OUT)/system/fonts/$(2)
+-	@echo "Symlink: $$@ -> $$<"
+-	@mkdir -p $$(dir $$@)
+-	@rm -rf $$@
+-	$(hide) ln -sf $$(notdir $$<) $$@
+-# this magic makes LOCAL_REQUIRED_MODULES work
+-ALL_MODULES.$(1).INSTALLED := \
+-    $(ALL_MODULES.$(1).INSTALLED) $(PRODUCT_OUT)/system/fonts/$(1)
+-endef
+-
+-##########################################
+-# We may only afford small font footprint.
+-##########################################
+-$(eval $(call create-font-symlink,DroidSans.ttf,Roboto-Regular.ttf))
+-$(eval $(call create-font-symlink,DroidSans-Bold.ttf,Roboto-Bold.ttf))
+-
+-################################
+-# On space-constrained devices, we include a subset of fonts:
+-ifeq ($(SMALLER_FONT_FOOTPRINT),true)
+-droidsans_fallback_src := DroidSansFallback.ttf
+-extra_font_files := DroidSans.ttf DroidSans-Bold.ttf
+-else
+-include $(CLEAR_VARS)
+-LOCAL_MODULE := DroidSansEthiopic-Regular.ttf
+-LOCAL_SRC_FILES := $(LOCAL_MODULE)
+-LOCAL_MODULE_CLASS := ETC
+-LOCAL_MODULE_TAGS := optional
+-LOCAL_MODULE_PATH := $(TARGET_OUT)/fonts
+-include $(BUILD_PREBUILT)
+-
+-include $(CLEAR_VARS)
+-LOCAL_MODULE := DroidSansTamil-Regular.ttf
+-LOCAL_SRC_FILES := $(LOCAL_MODULE)
+-LOCAL_MODULE_CLASS := ETC
+-LOCAL_MODULE_TAGS := optional
+-LOCAL_MODULE_PATH := $(TARGET_OUT)/fonts
+-include $(BUILD_PREBUILT)
+-
+-include $(CLEAR_VARS)
+-LOCAL_MODULE := DroidSansTamil-Bold.ttf
+-LOCAL_SRC_FILES := $(LOCAL_MODULE)
+-LOCAL_MODULE_CLASS := ETC
+-LOCAL_MODULE_TAGS := optional
+-LOCAL_MODULE_PATH := $(TARGET_OUT)/fonts
+-include $(BUILD_PREBUILT)
+-
+-include $(CLEAR_VARS)
+-LOCAL_MODULE := MTLmr3m.ttf
+-LOCAL_SRC_FILES := $(LOCAL_MODULE)
+-LOCAL_MODULE_CLASS := ETC
+-LOCAL_MODULE_TAGS := optional
+-LOCAL_MODULE_PATH := $(TARGET_OUT)/fonts
+-include $(BUILD_PREBUILT)
+-
+-droidsans_fallback_src := DroidSansFallbackFull.ttf
+-extra_font_files := \
+-	DroidSans.ttf \
+-	DroidSans-Bold.ttf \
+-	DroidSansEthiopic-Regular.ttf \
+-	DroidSansTamil-Regular.ttf \
+-	DroidSansTamil-Bold.ttf \
+-	MTLmr3m.ttf
+-endif  # SMALLER_FONT_FOOTPRINT
+-
+-################################
+-include $(CLEAR_VARS)
+-LOCAL_MODULE := DroidSansFallback.ttf
+-LOCAL_SRC_FILES := $(droidsans_fallback_src)
+-LOCAL_MODULE_CLASS := ETC
+-LOCAL_MODULE_TAGS := optional
+-LOCAL_MODULE_PATH := $(TARGET_OUT)/fonts
+-LOCAL_REQUIRED_MODULES := $(extra_font_files)
+-include $(BUILD_PREBUILT)
+-
+-font_symlink_src :=
+-font_symlink :=
+-droidsans_fallback_src :=
+-extra_font_files :=
+-################################
+-# Build the rest font files as prebuilt.
+-
+-# $(1): The source file name in LOCAL_PATH.
+-#       It also serves as the module name and the dest file name.
+-define build-one-font-module
+-$(eval include $(CLEAR_VARS))\
+-$(eval LOCAL_MODULE := $(1))\
+-$(eval LOCAL_SRC_FILES := $(1))\
+-$(eval LOCAL_MODULE_CLASS := ETC)\
+-$(eval LOCAL_MODULE_TAGS := optional)\
+-$(eval LOCAL_MODULE_PATH := $(TARGET_OUT)/fonts)\
+-$(eval include $(BUILD_PREBUILT))
+-endef
+-
+-font_src_files := \
+-    Roboto-Regular.ttf \
+-    Roboto-Bold.ttf \
+-    Roboto-Italic.ttf \
+-    Roboto-BoldItalic.ttf \
+-    DroidSerif-Regular.ttf \
+-    DroidSerif-Bold.ttf \
+-    DroidSerif-Italic.ttf \
+-    DroidSerif-BoldItalic.ttf \
+-    DroidSansMono.ttf \
+-    Clockopia.ttf \
+-    AndroidClock.ttf \
+-    AndroidClock_Highlight.ttf \
+-    AndroidClock_Solid.ttf
+-
+-ifeq ($(MINIMAL_FONT_FOOTPRINT),true)
+-
+-$(eval $(call create-font-symlink,Roboto-Light.ttf,Roboto-Regular.ttf))
+-$(eval $(call create-font-symlink,Roboto-LightItalic.ttf,Roboto-Italic.ttf))
+-$(eval $(call create-font-symlink,Roboto-Thin.ttf,Roboto-Regular.ttf))
+-$(eval $(call create-font-symlink,Roboto-ThinItalic.ttf,Roboto-Italic.ttf))
+-$(eval $(call create-font-symlink,RobotoCondensed-Regular.ttf,Roboto-Regular.ttf))
+-$(eval $(call create-font-symlink,RobotoCondensed-Bold.ttf,Roboto-Bold.ttf))
+-$(eval $(call create-font-symlink,RobotoCondensed-Italic.ttf,Roboto-Italic.ttf))
+-$(eval $(call create-font-symlink,RobotoCondensed-BoldItalic.ttf,Roboto-BoldItalic.ttf))
+-
+-else # !MINIMAL_FONT
+-font_src_files += \
+-    Roboto-Light.ttf \
+-    Roboto-LightItalic.ttf \
+-    Roboto-Thin.ttf \
+-    Roboto-ThinItalic.ttf \
+-    RobotoCondensed-Regular.ttf \
+-    RobotoCondensed-Bold.ttf \
+-    RobotoCondensed-Italic.ttf \
+-    RobotoCondensed-BoldItalic.ttf \
+-    DroidNaskh-Regular.ttf \
+-    DroidNaskh-Regular-SystemUI.ttf \
+-    DroidSansDevanagari-Regular.ttf \
+-    DroidSansHebrew-Regular.ttf \
+-    DroidSansHebrew-Bold.ttf \
+-    DroidSansThai.ttf \
+-    DroidSansArmenian.ttf \
+-    DroidSansGeorgian.ttf \
+-    AndroidEmoji.ttf
+-
+-endif # !MINIMAL_FONT
+-
+-$(foreach f, $(font_src_files), $(call build-one-font-module, $(f)))
+-
+-build-one-font-module :=
+-font_src_files :=
++# DISABLE THIS
+diff --git a/data/fonts/fonts.mk b/data/fonts/fonts.mk
+index 875795a..c46b380 100644
+--- a/data/fonts/fonts.mk
++++ b/data/fonts/fonts.mk
+@@ -14,39 +14,4 @@
+ 
+ # Warning: this is actually a product definition, to be inherited from
+ 
+-PRODUCT_COPY_FILES := \
+-    frameworks/base/data/fonts/system_fonts.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/system_fonts.xml \
+-    frameworks/base/data/fonts/fallback_fonts.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/fallback_fonts.xml
+-
+-PRODUCT_PACKAGES := \
+-    DroidSansFallback.ttf \
+-    Roboto-Regular.ttf \
+-    Roboto-Bold.ttf \
+-    Roboto-Italic.ttf \
+-    Roboto-BoldItalic.ttf \
+-    Roboto-Light.ttf \
+-    Roboto-LightItalic.ttf \
+-    Roboto-Thin.ttf \
+-    Roboto-ThinItalic.ttf \
+-    RobotoCondensed-Regular.ttf \
+-    RobotoCondensed-Bold.ttf \
+-    RobotoCondensed-Italic.ttf \
+-    RobotoCondensed-BoldItalic.ttf \
+-    DroidNaskh-Regular.ttf \
+-    DroidNaskh-Regular-SystemUI.ttf \
+-    DroidSansDevanagari-Regular.ttf \
+-    DroidSansHebrew-Regular.ttf \
+-    DroidSansHebrew-Bold.ttf \
+-    DroidSansThai.ttf \
+-    DroidSerif-Regular.ttf \
+-    DroidSerif-Bold.ttf \
+-    DroidSerif-Italic.ttf \
+-    DroidSerif-BoldItalic.ttf \
+-    DroidSansMono.ttf \
+-    DroidSansArmenian.ttf \
+-    DroidSansGeorgian.ttf \
+-    AndroidEmoji.ttf \
+-    Clockopia.ttf \
+-    AndroidClock.ttf \
+-    AndroidClock_Highlight.ttf \
+-    AndroidClock_Solid.ttf \
++# DISABLE THIS

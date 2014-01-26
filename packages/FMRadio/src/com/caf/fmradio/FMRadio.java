@@ -101,7 +101,7 @@ public class FMRadio extends Activity
 {
    public static final String LOGTAG = "FMRadio";
 
-   public static final boolean RECORDING_ENABLE = true;
+   public static final boolean RECORDING_ENABLE = false; // fix that!
    MediaRecorder mRecorder = null;
 
    /* menu Identifiers */

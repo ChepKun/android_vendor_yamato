@@ -71,7 +71,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 ifneq ($(TARGET_BUILD_VARIANT),eng)
 # Enable ADB authentication
-ADDITIONAL_DEFAULT_PROPERTIES += ro.adb.secure=1
+ADDITIONAL_DEFAULT_PROPERTIES += ro.adb.secure=0
 endif
 
 # Copy over the changelog to the device
@@ -131,6 +131,44 @@ PRODUCT_COPY_FILES += \
 # T-Mobile theme engine
 include vendor/cm/config/themes_common.mk
 
+# Fonts
+PRODUCT_COPY_FILES += \
+    vendor/yamato/data/fonts/system_fonts.xml:system/etc/system_fonts.xml \
+    vendor/yamato/data/fonts/fallback_fonts.xml:system/etc/fallback_fonts.xml
+
+PRODUCT_PACKAGES += \
+    DroidSansFallback.ttf \
+    Roboto-Regular.ttf \
+    Roboto-Bold.ttf \
+    Roboto-Italic.ttf \
+    Roboto-BoldItalic.ttf \
+    Roboto-Light.ttf \
+    Roboto-LightItalic.ttf \
+    Roboto-Thin.ttf \
+    Roboto-ThinItalic.ttf \
+    RobotoCondensed-Regular.ttf \
+    RobotoCondensed-Bold.ttf \
+    RobotoCondensed-Italic.ttf \
+    RobotoCondensed-BoldItalic.ttf \
+    DroidNaskh-Regular.ttf \
+    DroidNaskh-Regular-SystemUI.ttf \
+    DroidSansDevanagari-Regular.ttf \
+    DroidSansHebrew-Regular.ttf \
+    DroidSansHebrew-Bold.ttf \
+    DroidSansThai.ttf \
+    DroidSerif-Regular.ttf \
+    DroidSerif-Bold.ttf \
+    DroidSerif-Italic.ttf \
+    DroidSerif-BoldItalic.ttf \
+    DroidSansMono.ttf \
+    DroidSansArmenian.ttf \
+    DroidSansGeorgian.ttf \
+    AndroidEmoji.ttf \
+    Clockopia.ttf \
+    AndroidClock.ttf \
+    AndroidClock_Highlight.ttf \
+    AndroidClock_Solid.ttf
+
 # Packages
 PRODUCT_PACKAGES += \
     Basic \
@@ -139,12 +177,12 @@ PRODUCT_PACKAGES += \
     Camera \
     Development \
     LatinIME \
-    ApolloY \
+    Apollo \
     VoicePlus \
     VoiceDialer \
     SoundRecorder \
     CMFileManager \
-    LockClockY
+    LockClock
 
 PRODUCT_PACKAGES += \
     CellBroadcastReceiver

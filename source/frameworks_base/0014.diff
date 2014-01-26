@@ -1,0 +1,35 @@
+From: ChepKun <ProgrammerKun@gmail.com>
+Subject: frameworks/base (0014): optimizations
+
+diff --git a/core/res/res/values/config.xml b/core/res/res/values/config.xml
+index f12b54c..718ec72 100644
+--- a/core/res/res/values/config.xml
++++ b/core/res/res/values/config.xml
+@@ -96,14 +96,14 @@
+     <integer name="config_shortAnimTime">200</integer>
+ 
+     <!-- The duration (in milliseconds) of a medium-length animation. -->
+-    <integer name="config_mediumAnimTime">400</integer>
++    <integer name="config_mediumAnimTime">350</integer>
+ 
+     <!-- The duration (in milliseconds) of a long animation. -->
+-    <integer name="config_longAnimTime">500</integer>
++    <integer name="config_longAnimTime">450</integer>
+ 
+     <!-- The duration (in milliseconds) of the activity open/close and fragment open/close animations. -->
+-    <integer name="config_activityShortDur">150</integer>
+-    <integer name="config_activityDefaultDur">220</integer>
++    <integer name="config_activityShortDur">130</integer>
++    <integer name="config_activityDefaultDur">180</integer>
+ 
+     <!-- Duration for the dim animation behind a dialog.  This may be either
+          a percentage, which is relative to the duration of the enter/open
+@@ -987,7 +987,7 @@
+     <!-- Safe headphone volume index. When music stream volume is below this index
+     the SPL on headphone output is compliant to EN 60950 requirements for portable music
+     players. -->
+-    <integer name="config_safe_media_volume_index">10</integer>
++    <integer name="config_safe_media_volume_index">15</integer>
+ 
+     <!-- Whether WiFi display is supported by this device.
+          There are many prerequisites for this feature to work correctly.

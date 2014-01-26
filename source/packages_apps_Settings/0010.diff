@@ -1,0 +1,49 @@
+From: ChepKun <ProgrammerKun@gmail.com>
+Subject: packages/Settings (0010): temp fix user add
+
+diff --git a/src/com/android/settings/users/UserSettings.java b/src/com/android/settings/users/UserSettings.java
+index dbaaf37..436e681 100644
+--- a/src/com/android/settings/users/UserSettings.java
++++ b/src/com/android/settings/users/UserSettings.java
+@@ -397,21 +397,21 @@ public class UserSettings extends SettingsPreferenceFragment
+             updateUserList();
+             new Thread() {
+                 public void run() {
++		    /*
+                     // Could take a few seconds
+                     UserInfo user = mUserManager.createUser(
+                             getActivity().getResources().getString(R.string.user_new_user_name), 0);
+                     if (user != null) {
+                         assignDefaultPhoto(user);
+-                    }
++                    }*/
+                     synchronized (mUserLock) {
+                         mAddingUser = false;
+                         mHandler.sendEmptyMessage(MESSAGE_UPDATE_LIST);
+-                        mHandler.sendMessage(mHandler.obtainMessage(
+-                                MESSAGE_SETUP_USER, user.id, user.serialNumber));
++                        //mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_SETUP_USER, user.id, user.serialNumber));
+                     }
+                 }
+             }.start();
+-        }
++        } 
+     }
+ 
+     private void switchUserNow(int userId) {
+@@ -490,6 +491,7 @@ public class UserSettings extends SettingsPreferenceFragment
+                 for (int userId : values[0]) {
+                     Bitmap bitmap = mUserManager.getUserIcon(userId);
+                     Drawable d = new BitmapDrawable(resources, bitmap);
++		    d.setDither(true);
+                     mUserIcons.append(userId, d);
+                 }
+                 return null;
+@@ -519,6 +521,7 @@ public class UserSettings extends SettingsPreferenceFragment
+ 
+     private void setPhotoId(Preference pref, UserInfo user) {
+         Drawable d = mUserIcons.get(user.id); // UserUtils.getUserIcon(mUserManager, user);
++	d.setDither(true);
+         if (d != null) {
+             pref.setIcon(d);
+         }

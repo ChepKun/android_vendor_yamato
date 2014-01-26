@@ -1,0 +1,79 @@
+From: ChepKun <ProgrammerKun@gmail.com>
+Subject: packages/Settings (0009): updates
+
+diff --git a/res/xml/system_settings.xml b/res/xml/system_settings.xml
+index 5e4e0c0..4cad53a 100644
+--- a/res/xml/system_settings.xml
++++ b/res/xml/system_settings.xml
+@@ -81,15 +81,20 @@
+         android:fragment="com.android.settings.cyanogenmod.HardwareKeys"
+         android:title="@string/hardware_keys_title" />
+ 
+-    <PreferenceScreen
+-        android:key="navigation_bar"
+-        android:fragment="com.android.settings.cyanogenmod.NavBar"
+-        android:title="@string/navigation_bar_title" />
++    <CheckBoxPreference
++        android:key="show_navbar"
++        android:title="@string/show_navbar"
++        android:defaultValue="false" />
+ 
+     <PreferenceCategory
+         android:key="navigation_bar_category"
+         android:title="@string/navigation_bar_category" >
+ 
++    	<PreferenceScreen
++            android:key="navigation_bar"
++            android:fragment="com.android.settings.cyanogenmod.NavBar"
++            android:title="@string/navigation_bar_title" />
++
+         <PreferenceScreen
+             android:key="navigation_ring"
+             android:fragment="com.android.settings.cyanogenmod.NavRing"
+@@ -103,11 +108,7 @@
+             android:entryValues="@array/nav_buttons_height_values"
+             android:defaultValue="48"
+             android:persistent="false" />
+-    </PreferenceCategory>
+ 
+-    <CheckBoxPreference
+-        android:key="show_navbar"
+-        android:title="@string/show_navbar"
+-        android:defaultValue="false" />
++    </PreferenceCategory>
+ 
+ </PreferenceScreen>
+diff --git a/src/com/android/settings/Settings.java b/src/com/android/settings/Settings.java
+index b3f50f8..4bc72bf 100644
+--- a/src/com/android/settings/Settings.java
++++ b/src/com/android/settings/Settings.java
+@@ -493,8 +493,7 @@ public class Settings extends PreferenceActivity
+                         || Utils.isMonkeyRunning()) {
+                     target.remove(i);
+                 }
+-            } else if (id == R.id.development_settings
+-                    || id == R.id.performance_settings) {
++            } else if (id == R.id.development_settings) {
+                 if (!showDev) {
+                     target.remove(i);
+                 }
+diff --git a/res/values-ru/cm_strings.xml b/res/values-ru/cm_strings.xml
+index 70d403d..8bd706e 100644
+--- a/res/values-ru/cm_strings.xml
++++ b/res/values-ru/cm_strings.xml
+@@ -628,12 +628,13 @@
+     <string name="status_bar_toggle_brightness_summary">Изменять яркость, проводя по строке состояния</string>
+     <string name="status_bar_toggle_info">Включена автоматическая регулировка яркости</string>
+     <string name="status_bar_signal_text_title">Стиль сигнала</string>
+-    <string name="status_bar_style_icon">Иконка</string>
++    <string name="status_bar_style_icon">Стандартный</string>
+     <string name="status_bar_style_hidden">Скрытый</string>
+     <string name="status_bar_signal_text_show_text">Текст</string>
+-    <string name="status_bar_battery_status_percentage">Процентный</string>
++    <string name="status_bar_battery_status_percentage">С процентами</string>
+     <string name="status_bar_battery_status_circle">Круг</string>
+     <string name="status_bar_battery_status_circle_percentage">Круг с процентами</string>
++    <string name="status_bar_battery_status_statusbar">Линия</string>
+ 
+     <!-- Status bar notification count -->
+     <string name="status_bar_notif_count_title">Счётчик уведомлений</string>

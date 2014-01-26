@@ -1,0 +1,15 @@
+From: ChepKun <ProgrammerKun@gmail.com>
+Subject: frameworks/base (0016): add multi user selector in port layout 
+
+diff --git a/core/res/res/layout-port/keyguard_host_view.xml b/core/res/res/layout-port/keyguard_host_view.xml
+index 6dedc1f..4e1a030 100644
+--- a/core/res/res/layout-port/keyguard_host_view.xml
++++ b/core/res/res/layout-port/keyguard_host_view.xml
+@@ -53,6 +53,7 @@
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:layout_gravity="center"/>
++	    <include layout="@layout/keyguard_multi_user_selector"/>
+         </FrameLayout>
+ 
+         <View android:layout_width="match_parent"

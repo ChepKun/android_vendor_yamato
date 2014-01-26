@@ -16,7 +16,6 @@ PRODUCT_PACKAGES += \
     librs_jni
 
 PRODUCT_PACKAGES += \
-    VideoEditor \
     libvideoeditor_jni \
     libvideoeditor_core \
     libvideoeditor_osal \
